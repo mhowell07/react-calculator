@@ -5,19 +5,22 @@
 body {
   margin: 0;
   background: linear-gradient(to right, #00AAFF, #00FFC6);
+  height: 100vh;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 
 .calculator-grid {
   display: grid;
-  margin-top: 2rem;
-  grid-template-columns: repeat(4, 6rem);
+  grid-template-columns: repeat(4, min(25vw, 6rem));
   grid-template-rows: minmax(7rem, auto) repeat(5, 6rem);
   justify-content: center;
 }
 
 .calculator-grid > button {
   cursor: pointer;
-  font-size: 2rem;
+  font-size: clamp(1.2rem, calc(12vw - 1em), 1.8rem);
   border: 1px solid #FFFFFF;
   outline: none;
   background: rgba(255, 255, 255, .75);
