@@ -1,4 +1,4 @@
-import { useReducer } from "react"
+import { useReducer, useCallback, useEffect } from "react"
 
 // custom components
 import DigitButton from "./components/DigitButton"
@@ -78,7 +78,7 @@ const reducer = (state, {type, payload}) => {
           ...state,
           operation: payload.operation,
           previousOperand: state.currentOperand,
-          currentOperand: null
+          currentOperand: "0"
         }
       }
 
@@ -86,7 +86,7 @@ const reducer = (state, {type, payload}) => {
         ...state,
         operation: payload.operation,
         previousOperand: evaluate(state),
-        currentOperand: null,
+        currentOperand: "0",
       }
     case ACTIONS.EVALUATE:
       if (state.operation == null || state.currentOperand == null || state.previousOperand == null) {
@@ -144,6 +144,44 @@ function App() {
     reducer, 
     {currentOperand: "0"}
   );
+
+  const handleKeyPress = useCallback((e) => {
+    let digit = 0;
+    let operation = "";
+    const digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."]
+    const operations = ["+", "-", "*"]
+    if (digits.includes(e.key)) {
+      digit = {digit: `${e.key}`}
+      dispatch({type: ACTIONS.ADD_DIGIT, payload: digit})
+    }
+    if (operations.includes(e.key)) {
+      operation = {operation: `${e.key}`}
+      dispatch({type: ACTIONS.CHOOSE_OPERATION, payload: operation})
+    }
+    if (e.key === "/") {
+      operation = {operation: "÷"}
+      dispatch({type: ACTIONS.CHOOSE_OPERATION, payload: operation})
+    }
+    if (e.key === "Delete") {
+      dispatch({type: ACTIONS.CLEAR})
+    }
+    if (e.key === "Backspace") {
+      dispatch({type: ACTIONS.DELETE_DIGIT})
+    }
+    if (e.key === "Enter") {
+      dispatch({type: ACTIONS.EVALUATE})
+    }
+  }, [])
+
+  useEffect(() => {
+    // attach the event listener
+    document.addEventListener('keydown', handleKeyPress);
+
+    // remove the event listener
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [handleKeyPress]);
 
   return (
     <div className="calculator-grid">
