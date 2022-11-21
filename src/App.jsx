@@ -21,7 +21,6 @@ const reducer = (state, {type, payload}) => {
           currentOperand: payload.digit,
           overwrite: false
         }
-
       }
       if (payload.digit === "0" && state.currentOperand === "0") return state
       if (payload.digit === "." && state.currentOperand == null) { return state } 
@@ -141,9 +140,9 @@ const formatOperand = (operand) => {
 }
 
 function App() {
-  const [{currentOperand = "0", previousOperand, operation}, dispatch] = useReducer(
+  const [{currentOperand, previousOperand, operation}, dispatch] = useReducer(
     reducer, 
-    {}
+    {currentOperand: "0"}
   );
 
   return (
